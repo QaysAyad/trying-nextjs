@@ -49,26 +49,22 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db),
   providers: [
     EmailProvider({
-      sendVerificationRequest({ identifier, url, provider, theme }) {
+      // TODO: add a real SMTP server info and from email address.
+      // server: {
+      //   host: "",
+      //   port: 00,
+      //   auth: {
+      //     user: "",
+      //     pass: ""
+      //   }
+      // },
+      // from: "NextAuth <no-reply@example.com>",
+      // TODO: remove sendVerificationRequest callback when a real SMTP server is added.
+      sendVerificationRequest({url}) {
         // TODO: send a real email rather than logging to the console.
         // We log the URL that is sent to the user in the terminal so that you can
         // login easily while in development mode.
         console.log(url);
-        
-        const { host } = new URL(url)
-        // NOTE: You are not required to use `nodemailer`, use whatever you want.
-        // const transport = createTransport(provider.server)
-        // const result = await transport.sendMail({
-        //   to: identifier,
-        //   from: provider.from,
-        //   subject: `Sign in to ${host}`,
-        //   text: text({ url, host }),
-        //   html: html({ url, host, theme }),
-        // })
-        // const failed = result.rejected.concat(result.pending).filter(Boolean)
-        // if (failed.length) {
-        //   throw new Error(`Email(s) (${failed.join(", ")}) could not be sent`)
-        // }
       },
     }),
     /**
