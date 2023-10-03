@@ -12,5 +12,27 @@ services:
     ports:
       - "5432:5432"
 
+  # Uncomment this when deploying to production
+  # app:
+  #   depends_on:
+  #     - db
+  #   build:
+  #     context: ./app
+  #     dockerfile: Dockerfile
+  #     args:
+  #       # When adding additional args variables, the schema in "/src/env.mjs"
+  #       NEXT_PUBLIC_CLIENTVAR: "clientvar"
+  #   working_dir: /app
+  #   networks: 
+  #     - webnet
+  #   ports:
+  #     - "3000:3000"
+  #   image: t3-app
+  #   environment:
+  #     # When adding additional environment variables, the schema in "/src/env.mjs"
+  #     NEXTAUTH_SECRET: 129U/p2oN3YLtMRavzdtxuqLPaT7iJo9IycJVzYJdbM=
+  #     DATABASE_URL: postgresql://postgres:postgres@db:5432/patients
+  #     NEXTAUTH_URL: http://localhost:3000
+
 networks:
   webnet:
