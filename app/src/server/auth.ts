@@ -5,7 +5,7 @@ import {
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
+import EmailProvider from "next-auth/providers/email";
 
 import { env } from "~/env.mjs";
 import { db } from "~/server/db";
@@ -48,9 +48,28 @@ export const authOptions: NextAuthOptions = {
   },
   adapter: PrismaAdapter(db),
   providers: [
-    DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
+    EmailProvider({
+      sendVerificationRequest({ identifier, url, provider, theme }) {
+        // TODO: send a real email rather than logging to the console.
+        // We log the URL that is sent to the user in the terminal so that you can
+        // login easily while in development mode.
+        console.log(url);
+        
+        const { host } = new URL(url)
+        // NOTE: You are not required to use `nodemailer`, use whatever you want.
+        // const transport = createTransport(provider.server)
+        // const result = await transport.sendMail({
+        //   to: identifier,
+        //   from: provider.from,
+        //   subject: `Sign in to ${host}`,
+        //   text: text({ url, host }),
+        //   html: html({ url, host, theme }),
+        // })
+        // const failed = result.rejected.concat(result.pending).filter(Boolean)
+        // if (failed.length) {
+        //   throw new Error(`Email(s) (${failed.join(", ")}) could not be sent`)
+        // }
+      },
     }),
     /**
      * ...add more providers here.
