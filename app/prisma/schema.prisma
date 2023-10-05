@@ -14,13 +14,39 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Example {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model Patient {
+    id          Int         @id @default(autoincrement())
+    client_id   String      @unique
+    createdAt   DateTime    @default(now())
+    updatedAt   DateTime    @updatedAt
+    dataPoints  DataPoint[]
+    @@index([client_id])
+}
 
-    @@index([name])
+model DataPoint {
+        id              Int      @id @default(autoincrement())
+        patient         Patient  @relation(fields: [patient_id], references: [id],  onDelete: Cascade)
+        patient_id      Int
+        date_testing    DateTime
+        date_birthdate  DateTime
+        gender          Int
+        ethnicity       Int
+        creatine        Float
+        chloride        Float
+        fasting_glucose Float
+        potassium       Float
+        sodium          Float
+        total_calcium   Float
+        total_protein   Float
+        creatine_unit   String
+        chloride_unit   String
+        fasting_glucose_unit String
+        potassium_unit String
+        sodium_unit    String
+        total_calcium_unit String
+        total_protein_unit String
+
+    @@index([patient_id, date_testing])
 }
 
 // Necessary for Next auth
