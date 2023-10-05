@@ -2,6 +2,9 @@
   "name": "app",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "build": "next build",
     "db:push": "prisma db push",
@@ -43,10 +46,14 @@
     "prettier-plugin-tailwindcss": "^0.5.1",
     "prisma": "^5.1.1",
     "tailwindcss": "^3.3.3",
+    "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
   },
   "ct3aMetadata": {
     "initVersion": "7.20.2"
   },
+  "prisma": {
+  "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+},
   "packageManager": "npm@8.12.1"
 }
