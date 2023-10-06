@@ -19,6 +19,7 @@ services:
   #   build:
   #     context: ./app
   #     dockerfile: Dockerfile
+  #     # command: sh -c "sleep 10s ; yarn build"
   #     args:
   #       # When adding additional args variables, the schema in "/src/env.mjs"
   #       NEXT_PUBLIC_CLIENTVAR: "clientvar"
