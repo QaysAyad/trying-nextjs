@@ -1,4 +1,4 @@
-import { DataPoint } from "@prisma/client";
+import type { DataPoint } from "@prisma/client";
 import { z } from "zod";
 
 import {
@@ -19,7 +19,7 @@ export const dataPointsRouter = createTRPCRouter({
   getAllForPatients: protectedProcedure
     .input(z.object({ patient_ids: z.number().array() }))
     .query(async ({ ctx, input }) => {
-      const dataPoints =  await ctx.db.dataPoint.findMany({
+      const dataPoints = await ctx.db.dataPoint.findMany({
         where: {
           patient_id: {
             in: input.patient_ids,
