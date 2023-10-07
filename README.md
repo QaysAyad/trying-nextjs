@@ -8,8 +8,8 @@
 1. Now I will try to build the trpc routes:
     To render patient page:
         - I need to get the patient info.
-        - I need to get the patient data points. Sort them with the ORM query so we don't have to do it in the js logic.
+        - I need to get the patient data points. Sort them with the ORM query by date_testing so we don't have to do it in the js logic.
     To render the compare page:
         - I need to get the all patient info (maybe it should be limit to 100 and implement Pagination).
         - I need to get the all patient info for a search value to help with filtering them faster (maybe it should be limited to 100).
-        - I need one to get all data points of a list of patients. Sort them with the ORM query so we don't have to do it in the js logic.
+        - I need one to get all data points of a list of patients. Sort them with the ORM query by date_testing so we don't have to do it in the js logic.
