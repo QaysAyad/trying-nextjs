@@ -40,7 +40,7 @@ export const dataPointsRouter = createTRPCRouter({
           acc.set(dataPoint.patient_id, [dataPoint]);
         }
         return acc;
-      }, new Map<number, DataPoint[]>());
+      }, new Map<DataPoint['patient_id'], DataPoint[]>());
       return dataPointsMap;
     }),
 });
