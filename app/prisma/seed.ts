@@ -52,12 +52,17 @@ async function main() {
           date_testing: new Date(dp.date_testing),
           date_birthdate: new Date(dp.date_birthdate),
         });
-      });
+      });    
     await prisma.patient.upsert({
       where: { client_id: client_id },
-      create: { client_id: client_id },
-      update: { dataPoints: { createMany: { data: dataPoint } } },
-    })
+      create: {
+        client_id: client_id,
+        dataPoints: { createMany: { data: dataPoint } }
+      },
+      update: {
+        dataPoints: { createMany: { data: dataPoint } }
+      },
+    });
   });
 }
 
