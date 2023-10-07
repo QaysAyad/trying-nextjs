@@ -14,6 +14,9 @@ export const dataPointsRouter = createTRPCRouter({
         where: {
           patient_id: input.patient_id,
         },
+        orderBy: {
+          date_testing: "asc",
+        },
       });
     }),
   getAllForPatients: protectedProcedure
