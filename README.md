@@ -2,13 +2,13 @@
 
 ## How to run
 
-1. Copy the ./app/.env.example file to ./app/.env and fill the missing values.
+1. Copy the ./app/.env.example file to ./app/.env and fill the missing values. Note: the values in the .env.example are reflected from the docker compose file but in a real production mode we should inject those values to the docker builder and using an env file and we should have a script to automatically create the .en file need out of the docker values if needed at all because if the docker run the nextjs app the env values can easily injected to the instance variables.
 1. Make sure you have docker installed.
 1. Run ```docker compose up``` to start the app.
 1. Open a new terminal ```cd app``` to go to the app folder.
 1. Run ```npm install```.
 1. Run ```npm run postinstall``` to generate the prisma client.
-1. Run ```npm run db:push``` to push the schema to the database.
+1. Run ```npm run db:push``` to push the schema to the database. Note: in real life we should run a migration script and we should have it in an atomic way so we can rollback if needed.
 1. Run ```npm run db:seed``` to seed the database with the data.
 1. Run ```npm run dev``` to start the app in dev mode or run ```npm run build && npm run start``` to run in production mode.
 
