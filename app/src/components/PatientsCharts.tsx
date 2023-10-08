@@ -9,6 +9,10 @@ export function PatientsCharts({ data: _data }: { data: Map<Patient['id'], DataP
                 key: `${id}`,
                 stroke: `#${Math.floor((Math.abs(Math.sin(id) * 16777215))).toString(16)}`,
             }))}
+            // TODO: This is a cpu intensive operation, if the data is too big, 
+            // we either need to do it on the server with a special endpoint 
+            // so migrating to use another charting library will be easier or 
+            // we find a way to cache it on the client so we don't need to redo it at every render.
             data={data.reduce((acc, [id, points]) => {
                 const dataKey = `${id}`;
                 points.forEach((point) => {
