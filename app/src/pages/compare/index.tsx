@@ -1,9 +1,10 @@
 import type { Patient } from "@prisma/client";
+import { Suspense } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import { use, useEffect, useMemo, useState } from "react";
-import { Chart } from "~/components/chart";
+import { Chart, ChartDataPoints } from "~/components/chart";
 
 import { api } from "~/utils/api";
 
@@ -89,13 +90,29 @@ function ChartBox({ data }: { data: [Patient['id'], Patient][] }) {
   if (!dataPoints) return <div>Loading...</div>;
   return <div style={{ height: '20rem', width: '20rem', backgroundColor: 'white' }}>
     <Chart
-      data={Array.from(dataPoints).map(([id, data]) => ({
-        id: id,
-        data: data.map((d) => ({
-          x: d.date_testing.toISOString(),
-          y: d.chloride,
-        })),
+      lines={data.map(([id]) => ({
+        key: `${id}`,
+        stroke: `#${Math.floor((Math.abs(Math.sin(id) * 16777215))).toString(16)}`,
       }))}
+      data={Array.from(dataPoints).reduce((acc, [id, data]) => {
+        const dataKey = `${id}`;
+        data.forEach((data) => {
+          const currentData = acc.find((accData) => accData.date === data.date_testing.getTime());
+          if (currentData) {
+            !currentData.keys.includes(dataKey) && currentData.keys.push(dataKey);
+            currentData.values[dataKey] = data.chloride;
+            return;
+          }
+          acc.push({
+            date: data.date_testing.getTime(),
+            keys: [dataKey],
+            values: {
+              [dataKey]: data.chloride,
+            }
+          })
+        });
+        return acc;
+      }, [] as ChartDataPoints<string>[])}
     />
   </div>;
 }
