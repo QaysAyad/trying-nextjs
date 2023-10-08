@@ -1,26 +1,22 @@
 import { signIn, signOut, useSession } from "next-auth/react";
-import Head from "next/head";
 import Link from "next/link";
+import HeadAndBackground from "~/components/HeadAndBackground";
 
 export default function Home() {
   return (
-    <>
-      <Head>
-        <title>Know Patents</title>
-        <meta name="description" content="Know Patents App" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
+    <HeadAndBackground
+      title={"Know Patents"}
+      content={"Know Patents App"}
+    >
+      <div className="flex min-h-screen flex-col items-center justify-center">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
           <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
             Welcome to <span className="text-[hsl(280,100%,70%)]">Know Patents</span> App
           </h1>
-          <div className="flex flex-col items-center gap-2">
-            <AuthShowcase />
-          </div>
+          <AuthShowcase />
         </div>
-      </main>
-    </>
+      </div>
+    </HeadAndBackground>
   );
 }
 
@@ -31,7 +27,7 @@ function AuthShowcase() {
       <p className="text-center text-2xl text-white">
         {sessionData && <span>Logged in as {sessionData.user?.email}</span>}
       </p>
-      {sessionData && <PagesLinks/>}
+      {sessionData && <PagesLinks />}
       <br />
       <button
         className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
