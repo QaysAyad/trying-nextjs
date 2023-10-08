@@ -30,9 +30,9 @@ function AuthPart() {
   const [_selectedPatients, setSelectedPatients] = useState(new Map<Patient['id'], Patient>());
   const selectedPatients = useMemo(() => Array.from(_selectedPatients), [_selectedPatients]);
 
-  if (typeof window === "undefined") return null
+  // if (typeof window === "undefined") return null
 
-  if (!sessionData) return <p>Access Denied</p>
+  // if (!sessionData) return <p>Access Denied</p>
 
 
   const searchInput = <input
