@@ -6,6 +6,7 @@
     "node": ">=18.0.0"
   },
   "scripts": {
+    "prisma:studio": "npx prisma studio",
     "build": "next build",
     "db:push": "prisma db push",
     "dev": "next dev",
