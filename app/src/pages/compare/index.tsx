@@ -90,30 +90,6 @@ function ChartBox({ data }: { data: [Patient['id'], Patient][] }) {
   const { data: dataPoints } = api.dataPoints.getAllForPatients.useQuery({ patient_ids: data.map(([id]) => id) });
   if (!dataPoints) return <div>Loading...</div>;
   return <div style={{ height: '20rem', width: '20rem', backgroundColor: 'white' }}>
-    <Chart
-      lines={data.map(([id]) => ({
-        key: `${id}`,
-        stroke: `#${Math.floor((Math.abs(Math.sin(id) * 16777215))).toString(16)}`,
-      }))}
-      data={Array.from(dataPoints).reduce((acc, [id, data]) => {
-        const dataKey = `${id}`;
-        data.forEach((data) => {
-          const currentData = acc.find((accData) => accData.date === data.date_testing.getTime());
-          if (currentData) {
-            !currentData.keys.includes(dataKey) && currentData.keys.push(dataKey);
-            currentData.values[dataKey] = data.chloride;
-            return;
-          }
-          acc.push({
-            date: data.date_testing.getTime(),
-            keys: [dataKey],
-            values: {
-              [dataKey]: data.chloride,
-            }
-          })
-        });
-        return acc;
-      }, [] as ChartDataPoints<string>[])}
-    />
+    <PatientsCharts data={dataPoints} />
   </div>;
 }
