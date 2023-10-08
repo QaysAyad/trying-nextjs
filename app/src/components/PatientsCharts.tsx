@@ -1,5 +1,6 @@
 import type { DataPoint, Patient } from "@prisma/client";
 import { Chart, type ChartDataPoints } from "~/components/Chart";
+import { capitalizeFirstLetter } from "~/utils/string";
 
 // This is called typescript types gymnastic when you want to create a type for your special case.
 type OmitUnits<T> = {
@@ -22,7 +23,9 @@ const pointUnitsKeys: Record<PointKeys, `${PointKeys}_unit`> = {
 export function PatientsCharts({ data: _data, pointKey }: { pointKey: PointKeys, data: Map<Patient['id'], DataPoint[]> }) {
     const data = Array.from(_data);
     const unit = data[0]![1][0]![pointUnitsKeys[pointKey]];
-    return <div style={{ height: '20rem', width: '20rem', backgroundColor: 'white' }}>
+    return <div
+        className="w-min flex flex-col items-center justify-center gap-2 p-8 text-white border"
+        >
         <Chart
             unit={unit}
             lines={data.map(([id]) => ({
@@ -53,5 +56,6 @@ export function PatientsCharts({ data: _data, pointKey }: { pointKey: PointKeys,
                 return acc;
             }, [] as ChartDataPoints<string>[])}
         />
+        {capitalizeFirstLetter(pointKey)} readings
     </div>;
 }
