@@ -1,5 +1,9 @@
-import { PrismaClient, type DataPoint } from '@prisma/client';
+import { PrismaClient, type DataPoint, type Patient } from '@prisma/client';
+import dayjs from "dayjs";
+import utc from 'dayjs/plugin/utc';
 import { mapAsync } from '../src/utils/array';
+dayjs.extend(utc);
+
 const prisma = new PrismaClient();
 
 const dataUrl = 'https://mockapi-furw4tenlq-ez.a.run.app/data';
@@ -43,20 +47,28 @@ async function main() {
     // because it is just safer to add it rather than running into runtime 
     // error one day.
     if (!r.length) return;
-    // All the datapoints have the same client_id.
-    const client_id = r[0]!.client_id;
-    const dataPoint = r.map<Omit<DataPoint, 'id' | 'patient_id'>>(
-      ({ client_id: _, ...dp }) => {
-        return Object.assign(dp, {
-          // TODO: User a better utc date parser.
-          date_testing: new Date(dp.date_testing),
-          date_birthdate: new Date(dp.date_birthdate),
-        });
-      });    
+    const firstDatePoint = r[0]!;
+    // All the datapoints have belong to the same user.
+    const patient: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'> = {
+      client_id: firstDatePoint.client_id,
+      date_birthdate: dayjs.utc(firstDatePoint.date_birthdate).toDate(),
+      gender: firstDatePoint.gender,
+      ethnicity: firstDatePoint.ethnicity,
+    };
+    const client_id = patient.client_id;
+    const dataPoint = r.map<Omit<DataPoint, 'id' | 'patient_id'>>(({
+      client_id: _,
+      date_birthdate: __,
+      gender: ___,
+      ethnicity: ____,
+      ...dp
+    }) => Object.assign(dp, {
+      date_testing: dayjs.utc(dp.date_testing).toDate(),
+    }));
     await prisma.patient.upsert({
       where: { client_id: client_id },
       create: {
-        client_id: client_id,
+        ...patient,
         dataPoints: { createMany: { data: dataPoint } }
       },
       update: {
