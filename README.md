@@ -1,4 +1,19 @@
-# Notes
+# Nextjs Challenge
+
+## How to run
+
+1. Copy the ./app/.env.example file to ./app/.env and fill the missing values.
+1. Make sure you have docker installed.
+1. Run ```docker compose up``` to start the app.
+1. Open a new terminal ```cd app``` to go to the app folder.
+1. Run ```npm install```.
+1. Run ```npm run postinstall``` to generate the prisma client.
+1. Run ```npm run db:push``` to push the schema to the database.
+1. Run ```npm run db:seed``` to seed the database with the data.
+1. Run ```npm run dev``` to start the app in dev mode or run ```npm run build && npm run start``` to run in production mode.
+
+## Notes
+
 
 1. Using Docker compose to init a postgres database and the Nextjs app.
 1. Using the "npm create t3-app@latest" to create a Nextjs app since it is one of the leading standard and opinionated [learn more from the founder himself](https://www.youtube.com/@t3dotgg).
