@@ -17,13 +17,14 @@ const pointUnitsKeys: Record<PointKeys, `${PointKeys}_unit`> = {
     sodium: "sodium_unit",
     total_calcium: "total_calcium_unit",
     total_protein: "total_protein_unit"
-};
+} as const;
 
 export function PatientsCharts({ data: _data, pointKey }: { pointKey: PointKeys, data: Map<Patient['id'], DataPoint[]> }) {
     const data = Array.from(_data);
+    const unit = data[0]![1][0]![pointUnitsKeys[pointKey]];
     return <div style={{ height: '20rem', width: '20rem', backgroundColor: 'white' }}>
         <Chart
-            unit={pointUnitsKeys[pointKey]}
+            unit={unit}
             lines={data.map(([id]) => ({
                 key: `${id}`,
                 stroke: `#${Math.floor((Math.abs(Math.sin(id) * 16777215))).toString(16)}`,
