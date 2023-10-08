@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
+import type { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 // This is called typescript types gymnastic when you want to create a type for your special case.
 export type ChartDataPoints<T extends string, Y extends string = T extends 'date' ? never : T> = {
     date: number;
@@ -16,10 +17,14 @@ const dateFormatter = (date: Date) => {
     return dayjs(date).format('DD/MM/YYYY');
 };
 
+const dataFormatter = (value: ValueType, key: NameType, unit:string) => {
+    return `PatientId, ${value.toString()}${unit} : reading`;
+};
+
 /**
  * date can't be used as a line name.
  */
-export function Chart<T extends string>({ lines, data }: { lines: LineData[], data: ChartDataPoints<T>[] }) {
+export function Chart<T extends string>({ lines, unit, data }: { lines: LineData[], unit: string, data: ChartDataPoints<T>[] }) {
     return <LineChart
         width={730}
         height={250}
@@ -34,7 +39,11 @@ export function Chart<T extends string>({ lines, data }: { lines: LineData[], da
             type="number"
             tickFormatter={dateFormatter} />
         <YAxis domain={['dataMin', 'dataMax']} />
-        <Tooltip labelFormatter={dateFormatter} />
+        <Tooltip
+            // TODO: Find a way to have full control over the tooltip.
+            formatter={(v, k) => dataFormatter(v, k, unit)}
+            labelFormatter={dateFormatter}
+        />
         <Legend />
         {lines.map((line) =>
             <Line key={line.key} type="monotone" dataKey={line.key} stroke={line.stroke} />)}
