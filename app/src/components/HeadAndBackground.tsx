@@ -11,7 +11,7 @@ interface Props {
     /** Page title */
     title: string;
     /** Page description */
-    content: string;
+    content?: string;
     /** Page children */
     children: React.ReactNode;
     meta?: Meta[];
@@ -22,7 +22,7 @@ export default function HeadAndBackground({children, ...props}: Props) {
         <>
             <Head>
                 <title>{props.title}</title>
-                <meta name="description" content={props.content} />
+                <meta name="description" content={props.content ?? "Know Patents App"} />
                 <link rel="icon" href="/favicon.ico" />
                 {props.meta?.map(({name, content}) => ( 
                     <meta key={name} name={name} content={content} />

@@ -1,25 +1,22 @@
 import type { Patient } from "@prisma/client";
-import { Suspense } from "react";
+import { Suspense, useRef } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import { use, useEffect, useMemo, useState } from "react";
 import { Chart, type ChartDataPoints } from "~/components/Chart";
-
 import { api } from "~/utils/api";
+import HeadAndBackground from "~/components/HeadAndBackground";
 
 export default function Compare() {
 
   return (
     <>
-      <Head>
-        <title>Compare Patents</title>
-        <meta name="description" content="Know Patents App" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
+      <HeadAndBackground
+        title="Compare Patents"
+      >
         <AuthPart />
-      </main>
+      </HeadAndBackground>
     </>
   );
 }
