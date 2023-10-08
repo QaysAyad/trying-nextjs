@@ -59,8 +59,8 @@ export function PatientsCharts(props: { measurementKey: MeasurementKeys, data: M
                 return acc;
             }, [] as ChartDataPoints<string>[])}
         />
-        <div className="text-xl font-semibold text-white">
-            {capitalizeFirstLetter(measurementKey)}({unit})
+        <div className="text-xl font-semibold capitalize text-white">
+            {measurementKey.replace("_", " ")}({unit})
         </div>
     </div>;
 }
