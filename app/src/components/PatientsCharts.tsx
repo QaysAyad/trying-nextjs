@@ -7,10 +7,10 @@ type OmitUnits<T> = {
     [K in keyof T as K extends `${infer _}_unit` ? never : K]: T[K];
 }
 
-type PointKeys =
+type MeasurementKeys =
     keyof OmitUnits<Omit<DataPoint, 'id' | 'patient_id' | 'date_testing'>>;
 
-const pointUnitsKeys: Record<PointKeys, `${PointKeys}_unit`> = {
+export const measurementUnitsKeys: Record<MeasurementKeys, `${MeasurementKeys}_unit`> = {
     creatine: "creatine_unit",
     chloride: "chloride_unit",
     fasting_glucose: "fasting_glucose_unit",
@@ -20,12 +20,15 @@ const pointUnitsKeys: Record<PointKeys, `${PointKeys}_unit`> = {
     total_protein: "total_protein_unit"
 } as const;
 
-export function PatientsCharts({ data: _data, pointKey }: { pointKey: PointKeys, data: Map<Patient['id'], DataPoint[]> }) {
-    const data = Array.from(_data);
-    const unit = data[0]![1][0]![pointUnitsKeys[pointKey]];
+export const measurementKeys = Object.keys(measurementUnitsKeys) as MeasurementKeys[];
+
+export function PatientsCharts(props: { measurementKey: MeasurementKeys, data: Map<Patient['id'], DataPoint[]> }) {
+    const { measurementKey } = props;
+    const data = Array.from(props.data);
+    const unit = data[0]![1][0]![measurementUnitsKeys[measurementKey]];
     return <div
-        className="w-min flex flex-col items-center justify-center gap-2 p-8 text-white border"
-        >
+        className="w-min flex flex-col items-center justify-center gap-2 p-8 border"
+    >
         <Chart
             unit={unit}
             lines={data.map(([id]) => ({
@@ -42,20 +45,22 @@ export function PatientsCharts({ data: _data, pointKey }: { pointKey: PointKeys,
                     const currentData = acc.find((accData) => accData.date === point.date_testing.getTime());
                     if (currentData) {
                         !currentData.keys.includes(dataKey) && currentData.keys.push(dataKey);
-                        currentData.values[dataKey] = point[pointKey];
+                        currentData.values[dataKey] = point[measurementKey];
                         return;
                     }
                     acc.push({
                         date: point.date_testing.getTime(),
                         keys: [dataKey],
                         values: {
-                            [dataKey]: point[pointKey],
+                            [dataKey]: point[measurementKey],
                         }
                     })
                 });
                 return acc;
             }, [] as ChartDataPoints<string>[])}
         />
-        {capitalizeFirstLetter(pointKey)} readings
+        <div className="text-xl font-semibold text-white">
+            {capitalizeFirstLetter(measurementKey)}({unit})
+        </div>
     </div>;
 }
