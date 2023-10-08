@@ -7,7 +7,7 @@ import { use, useEffect, useMemo, useState } from "react";
 import { Chart, type ChartDataPoints } from "~/components/Chart";
 import { api } from "~/utils/api";
 import HeadAndBackground from "~/components/HeadAndBackground";
-import { PatientsCharts } from "~/components/PatientsCharts";
+import { AllMeasurementsCharts } from "~/components/AllMeasurementsCharts";
 
 export default function Compare() {
 
@@ -65,7 +65,7 @@ function AuthPart() {
           })}
         />
       </div>
-      <ChartBox data={selectedPatients} />
+      {selectedPatients.length && <AllMeasurementsCharts data={selectedPatients} />}
     </>
   );
 }
@@ -85,10 +85,4 @@ function SelectedBox({ data, onRemove }: { data: [Patient['id'], Patient][], onR
     </div>
 
   </div>;
-}
-
-function ChartBox({ data }: { data: [Patient['id'], Patient][] }) {
-  const { data: dataPoints } = api.dataPoints.getAllForPatients.useQuery({ patient_ids: data.map(([id]) => id) });
-  if (!dataPoints) return <div>Loading...</div>;
-  return <PatientsCharts pointKey="chloride" data={dataPoints} />;
 }
