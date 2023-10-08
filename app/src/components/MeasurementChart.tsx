@@ -1,6 +1,5 @@
 import type { DataPoint, Patient } from "@prisma/client";
 import { Chart, type ChartDataPoints } from "~/components/Chart";
-import { capitalizeFirstLetter } from "~/utils/string";
 
 // This is called typescript types gymnastic when you want to create a type for your special case.
 type OmitUnits<T> = {
@@ -22,7 +21,7 @@ export const measurementUnitsKeys: Record<MeasurementKeys, `${MeasurementKeys}_u
 
 export const measurementKeys = Object.keys(measurementUnitsKeys) as MeasurementKeys[];
 
-export function PatientsCharts(props: { measurementKey: MeasurementKeys, data: Map<Patient['id'], DataPoint[]> }) {
+export function MeasurementChart(props: { measurementKey: MeasurementKeys, data: Map<Patient['id'], DataPoint[]> }) {
     const { measurementKey } = props;
     const data = Array.from(props.data);
     const unit = data[0]![1][0]![measurementUnitsKeys[measurementKey]];
