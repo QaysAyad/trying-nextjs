@@ -1,10 +1,29 @@
 import type { DataPoint, Patient } from "@prisma/client";
 import { Chart, type ChartDataPoints } from "~/components/Chart";
 
-export function PatientsCharts({ data: _data }: { data: Map<Patient['id'], DataPoint[]> }) {
+// This is called typescript types gymnastic when you want to create a type for your special case.
+type OmitUnits<T> = {
+    [K in keyof T as K extends `${infer _}_unit` ? never : K]: T[K];
+}
+
+type PointKeys =
+    keyof OmitUnits<Omit<DataPoint, 'id' | 'patient_id' | 'date_testing'>>;
+
+const pointUnitsKeys: Record<PointKeys, `${PointKeys}_unit`> = {
+    creatine: "creatine_unit",
+    chloride: "chloride_unit",
+    fasting_glucose: "fasting_glucose_unit",
+    potassium: "potassium_unit",
+    sodium: "sodium_unit",
+    total_calcium: "total_calcium_unit",
+    total_protein: "total_protein_unit"
+};
+
+export function PatientsCharts({ data: _data, pointKey }: { pointKey: PointKeys, data: Map<Patient['id'], DataPoint[]> }) {
     const data = Array.from(_data);
     return <div style={{ height: '20rem', width: '20rem', backgroundColor: 'white' }}>
         <Chart
+            unit={pointUnitsKeys[pointKey]}
             lines={data.map(([id]) => ({
                 key: `${id}`,
                 stroke: `#${Math.floor((Math.abs(Math.sin(id) * 16777215))).toString(16)}`,
@@ -19,14 +38,14 @@ export function PatientsCharts({ data: _data }: { data: Map<Patient['id'], DataP
                     const currentData = acc.find((accData) => accData.date === point.date_testing.getTime());
                     if (currentData) {
                         !currentData.keys.includes(dataKey) && currentData.keys.push(dataKey);
-                        currentData.values[dataKey] = point.chloride;
+                        currentData.values[dataKey] = point[pointKey];
                         return;
                     }
                     acc.push({
                         date: point.date_testing.getTime(),
                         keys: [dataKey],
                         values: {
-                            [dataKey]: point.chloride,
+                            [dataKey]: point[pointKey],
                         }
                     })
                 });
