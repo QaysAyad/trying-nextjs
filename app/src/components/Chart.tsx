@@ -40,4 +40,3 @@ export function Chart<T extends string>({ lines, data }: { lines: LineData[], da
             <Line key={line.key} type="monotone" dataKey={line.key} stroke={line.stroke} />)}
     </LineChart>;
 }
-
