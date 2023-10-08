@@ -1,4 +1,4 @@
-import { PrismaClient, DataPoint } from '@prisma/client';
+import { PrismaClient, type DataPoint } from '@prisma/client';
 import { mapAsync } from '../src/utils/array';
 const prisma = new PrismaClient();
 
