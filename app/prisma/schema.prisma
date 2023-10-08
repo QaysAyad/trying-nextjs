@@ -17,6 +17,9 @@ datasource db {
 model Patient {
     id          Int         @id @default(autoincrement())
     client_id   String      @unique
+    date_birthdate  DateTime
+    gender          Int
+    ethnicity       Int
     createdAt   DateTime    @default(now())
     updatedAt   DateTime    @updatedAt
     dataPoints  DataPoint[]
@@ -28,9 +31,6 @@ model DataPoint {
         patient         Patient  @relation(fields: [patient_id], references: [id],  onDelete: Cascade)
         patient_id      Int
         date_testing    DateTime
-        date_birthdate  DateTime
-        gender          Int
-        ethnicity       Int
         creatine        Float
         chloride        Float
         fasting_glucose Float
