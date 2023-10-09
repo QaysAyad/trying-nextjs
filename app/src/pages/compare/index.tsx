@@ -7,7 +7,7 @@ import { use, useEffect, useMemo, useState } from "react";
 import { Chart, type ChartDataPoints } from "~/components/Chart";
 import { api } from "~/utils/api";
 import HeadAndBackground from "~/components/HeadAndBackground";
-import { AllMeasurementsCharts } from "~/components/AllMeasurementsCharts";
+import { MeasurementChart, measurementKeys } from "~/components/MeasurementChart";
 
 export default function Compare() {
 
@@ -65,7 +65,7 @@ function AuthPart() {
           })}
         />
       </div>
-      {selectedPatients.length && <AllMeasurementsCharts data={selectedPatients} />}
+      {selectedPatients.length && <AllCharts data={selectedPatients} />}
     </>
   );
 }
@@ -84,5 +84,13 @@ function SelectedBox({ data, onRemove }: { data: [Patient['id'], Patient][], onR
         </button>)}
     </div>
 
+  </div>;
+}
+
+export function AllCharts({ data }: { data: [Patient['id'], Patient][] }) {
+  const { data: dataPoints } = api.dataPoints.getAllForPatients.useQuery({ patient_ids: data.map(([id]) => id) });
+  if (!dataPoints) return <div>Loading...</div>;
+  return <div className="flex flex-col items-center">
+    {measurementKeys.map((key) => <MeasurementChart key={key} measurementKey={key} data={dataPoints} />)}
   </div>;
 }
