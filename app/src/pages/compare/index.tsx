@@ -1,10 +1,5 @@
 import type { Patient } from "@prisma/client";
-import { Suspense, useRef } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
-import Head from "next/head";
-import Link from "next/link";
-import { use, useEffect, useMemo, useState } from "react";
-import { Chart, type ChartDataPoints } from "~/components/Chart";
+import { useMemo, useState } from "react";
 import { api } from "~/utils/api";
 import HeadAndBackground from "~/components/HeadAndBackground";
 import { MeasurementChart, measurementKeys } from "~/components/MeasurementChart";
@@ -27,15 +22,9 @@ export default function Compare() {
 }
 function AuthPart() {
   const [search, setSearch] = useState('');
-  const { data: sessionData } = useSession();
   const { data: patients, isLoading: isLoadingPatients } = api.patients.search.useQuery({ client_id: search });
   const [_selectedPatients, setSelectedPatients] = useState(new Map<Patient['id'], Patient>());
   const selectedPatients = useMemo(() => Array.from(_selectedPatients), [_selectedPatients]);
-
-  // if (typeof window === "undefined") return null
-
-  // if (!sessionData) return <p>Access Denied</p>
-
   return (
     <>
       <div className="flex">
