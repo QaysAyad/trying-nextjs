@@ -1,7 +1,7 @@
 
 import { signIn, useSession } from "next-auth/react";
 
-export default function AuthRenderProtector({children}:{children:React.ReactNode}) {
+export default function AuthRenderProtector({ children }: { children: React.ReactNode }) {
   const { data: sessionData } = useSession();
   return sessionData ? children :(
     <div className="flex flex-col items-center justify-center gap-4">

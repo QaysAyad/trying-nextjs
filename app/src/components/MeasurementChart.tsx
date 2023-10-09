@@ -1,5 +1,6 @@
 import type { DataPoint, Patient } from "@prisma/client";
 import { Chart, type ChartDataPoints } from "~/components/Chart";
+import { snakeCaseToText } from "~/utils/string";
 
 // This is called typescript types gymnastic when you want to create a type for your special case.
 type OmitUnits<T> = {
@@ -59,7 +60,7 @@ export function MeasurementChart(props: { measurementKey: MeasurementKeys, data:
             }, [] as ChartDataPoints<string>[])}
         />
         <div className="text-xl font-semibold capitalize text-white">
-            {measurementKey.replace("_", " ")}({unit})
+            {snakeCaseToText(measurementKey)}({unit})
         </div>
     </div>;
 }
