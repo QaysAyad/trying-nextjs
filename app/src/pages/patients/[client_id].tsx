@@ -1,5 +1,5 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import { AllMeasurementsCharts } from "~/components/MeasurementChart";
+import { AllMeasurementsCharts, measurementKeys } from "~/components/MeasurementChart";
 import HeadAndBackground from "~/components/HeadAndBackground";
 import { ssgHelper } from "~/helpers/ssg";
 import { api } from "~/utils/api";
