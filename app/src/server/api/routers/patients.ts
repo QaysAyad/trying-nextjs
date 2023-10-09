@@ -3,6 +3,7 @@ import { z } from "zod";
 import {
   createTRPCRouter,
   protectedProcedure,
+  publicProcedure,
 } from "~/server/api/trpc";
 
 export const patientsRouter = createTRPCRouter({
@@ -28,4 +29,13 @@ export const patientsRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {
     return ctx.db.patient.findMany();
   }),
+  // Public end points should not have any sensitive information.
+  getAllPublic: publicProcedure.query(({ ctx }) => {
+    return ctx.db.patient.findMany({select: {client_id: true, id: true}});
+  }),
+  getPublic: publicProcedure
+    .input(z.object({ client_id: z.string().min(1) }))
+    .query(({ ctx, input }) => {
+      return ctx.db.patient.findFirst({ where: { client_id: input.client_id }, select: { client_id: true, id: true } });
+    }),
 });
