@@ -6,9 +6,9 @@ import { api } from "~/utils/api";
 import AuthRenderProtector from "~/components/AuthRenderProtector";
 import Loading from "~/components/loading";
 import { Suspense } from "react";
-import type { DataPoint } from "@prisma/client";
-import dayjs from "dayjs";
+import type { Patient,  DataPoint } from "@prisma/client";
 import { snakeCaseToText } from "~/utils/string";
+import { dayFormatter } from "~/utils/dayjs";
 
 // TODO: Remove this.
 // Patient.getInitialProps = (ctx: NextPageContext) => {
@@ -19,7 +19,7 @@ import { snakeCaseToText } from "~/utils/string";
 // }
 
 interface Props { client_id: string }
-const Patient: NextPage<Props> = ({ client_id }) => {
+const PatientPage: NextPage<Props> = ({ client_id }) => {
   const { data: patientData, isLoading } = api.patients.getPublic.useQuery({ client_id });
   if (isLoading) return <Loading />;
   if (!patientData) return <div>404</div>;
@@ -30,7 +30,7 @@ const Patient: NextPage<Props> = ({ client_id }) => {
       meta={[{ name: "description", content: `Patent ${patientData.client_id} info` }]}
     >
       <div className="flex flex-col items-center justify-center gap-4">
-        <h1 className="text-center text-2xl text-white">
+        <h1 className="text-center text-2xl text-white p-10">
           <span>Patient: {patientData.client_id}</span>
         </h1>
         <br />
@@ -44,7 +44,7 @@ const Patient: NextPage<Props> = ({ client_id }) => {
   );
 }
 
-export default Patient;
+export default PatientPage;
 
 
 function AuthPart({ client_id }: Props) {
@@ -53,16 +53,54 @@ function AuthPart({ client_id }: Props) {
   return (
     <>
       {isLoadingData && <Loading />}
+      {data && <h2 className="text-3xl font-semibold text-white">Info</h2>}
+      {data && <TableInfo data={data} />}
+      {data && <h2 className="text-3xl font-semibold text-white">Data Points</h2>}
       {data && <Table data={data.dataPoints} />}
       {data && <AllMeasurementsCharts data={new Map([[data.id, data.dataPoints]])} />}
     </>
   );
 }
 
+function TableInfo({ data }: { data: Patient }) {
+  return <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <table className="w-full text-sm text-left text-gray-700 dark:text-gray-200">
+      <thead className="text-xs text-gray-800 uppercase bg-violet-50 dark:bg-violet-700 dark:text-gray-300">
+        <tr>
+          <th scope="col" className="px-6 py-3">
+            Birth Date
+          </th>
+          <th scope="col" className="px-6 py-3">
+            Ethnicity
+          </th>
+          <th scope="col" className="px-6 py-3">
+            Gender
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr className='border-b dark:border-violet-700 bg-violet-50 dark:bg-violet-800'>
+          <td className="px-6 py-4">
+            {dayFormatter(data.date_birthdate)}
+          </td>
+          <td className="px-6 py-4">
+            {/* TODO: Map the enum numbers to text readable values */}
+            {data.ethnicity}
+          </td>
+          <td className="px-6 py-4">
+            {/* TODO: Map the enum numbers to text readable values */}
+            {data.gender}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+}
+
 function Table({ data }: { data: DataPoint[] }) {
   return <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-    <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-      <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    <table className="w-full text-sm text-left text-gray-700 dark:text-gray-200">
+      <thead className="text-xs text-gray-800 uppercase bg-violet-50 dark:bg-violet-700 dark:text-gray-300">
         <tr>
           <th scope="col" className="px-6 py-3">
             Testing Date
@@ -74,10 +112,10 @@ function Table({ data }: { data: DataPoint[] }) {
       </thead>
       <tbody>
         {data.map((dataPoint, i) =>
-          <tr key={i} className={`border-b dark:border-gray-700 ${i % 2 ? 'bg-white dark:bg-gray-900' : 'bg-gray-50 dark:bg-gray-800'}`}>
-            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+          <tr key={i} className={`border-b dark:border-violet-700 ${i % 2 ? 'bg-white dark:bg-violet-900' : 'bg-violet-50 dark:bg-violet-800'}`}>
+            <th scope="row" className="px-6 py-4 font-medium text-gray whitespace-nowrap dark:text-white">
               {/* We shouldn't use utc because it should show the day of the testing corresponding to the system date. */}
-              {dayjs(dataPoint.date_testing).format("YYYY-MM-DD")}
+              {dayFormatter(dataPoint.date_testing)}
             </th>
             {measurementKeys.map((key) => <td key={key} className="px-6 py-4">
               {dataPoint[key]}
