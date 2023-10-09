@@ -10,7 +10,7 @@ export const patientsRouter = createTRPCRouter({
   getByClientIdWithDataPoints: protectedProcedure
     .input(z.object({ client_id: z.string().min(1) }))
     .query(({ ctx, input }) => {
-      return ctx.db.patient.findFirst({ where: { client_id: input.client_id }, include: { dataPoints: true } });
+      return ctx.db.patient.findFirst({ where: { client_id: input.client_id }, include: { dataPoints: {orderBy: {date_testing: 'asc'}} }});
     }),
   search: protectedProcedure
     .input(z.object({ client_id: z.string() }))
