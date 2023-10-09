@@ -9,6 +9,7 @@ import { Table, TableBody, TableDataCell, TableHeader, TableHeaderColumnCell, Ta
 import { dayFormatter } from "~/utils/dayjs";
 import { snakeCaseToText } from "~/utils/string";
 import { RejectButton } from "~/components/Buttons";
+import { InputBox } from "~/components/InputBox";
 
 export default function Compare() {
 
@@ -36,13 +37,14 @@ function AuthPart() {
       <div className="flex">
         <div className="flex flex-col">
           <h2 className="text-3xl font-semibold text-white">Patients</h2>
-          <input
+          <InputBox onSearch={setSearch}></InputBox>
+          {/* <input
             placeholder="Search with Client ID"
             className="grow bg-transparent outline-none"
             type="text"
             onChange={(e) => setSearch(e.target.value)}
-          />
-          <div className="w-50 h-40  overflow-scroll flex flex-col items-stretch">
+          /> */}
+          <div className="w-50 h-40  overflow-y-scroll flex flex-col items-stretch">
             {isLoadingPatients && <Loading />}
             {patients?.map((patient) =>
               <button
