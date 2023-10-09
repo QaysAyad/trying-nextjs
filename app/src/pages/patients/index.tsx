@@ -2,6 +2,7 @@ import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import { useState } from "react";
+import Loading from "~/components/loading";
 
 import { api } from "~/utils/api";
 
@@ -36,7 +37,7 @@ function AuthPart() {
             onChange={(e) => setSearch(e.target.value)}
           />
           <div className="w-50 h-40  overflow-scroll flex flex-col items-stretch">
-            {isLoadingPatients && <div>Loading...</div>}
+            {isLoadingPatients && <Loading />}
             {patients?.map((patient) =>
               <Link
                 key={patient.id}

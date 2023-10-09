@@ -4,6 +4,7 @@ import HeadAndBackground from "~/components/HeadAndBackground";
 import { api } from "~/utils/api";
 import { type NextPageContext } from 'next'
 import AuthRenderProtector from "~/components/AuthRenderProtector";
+import Loading from "~/components/loading";
 
 Patient.getInitialProps = (ctx: NextPageContext) => {
   // TODO: Find a way to get into the session info and create a trpc client then
@@ -15,7 +16,7 @@ Patient.getInitialProps = (ctx: NextPageContext) => {
 export default function Patient({ clientId }: { clientId: string }) {
   const { data: patientData, isLoading } =
     api.patients.getByClientIdWithDataPoints.useQuery({ client_id: clientId });
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loading />;
   if (!patientData) return <div>404</div>;
 
   return (

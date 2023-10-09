@@ -9,6 +9,7 @@ import { api } from "~/utils/api";
 import HeadAndBackground from "~/components/HeadAndBackground";
 import { MeasurementChart, measurementKeys } from "~/components/MeasurementChart";
 import AuthRenderProtector from "~/components/AuthRenderProtector";
+import Loading from "~/components/loading";
 
 export default function Compare() {
 
@@ -47,7 +48,7 @@ function AuthPart() {
             onChange={(e) => setSearch(e.target.value)}
           />
           <div className="w-50 h-40  overflow-scroll flex flex-col items-stretch">
-            {isLoadingPatients && <div>Loading...</div>}
+            {isLoadingPatients && <Loading />}
             {patients?.map((patient) =>
               <button
                 className="bg-white/10 px-2 font-semibold text-white no-underline transition hover:bg-white/20"
@@ -92,7 +93,7 @@ function SelectedBox({ data, onRemove }: { data: [Patient['id'], Patient][], onR
 
 export function AllCharts({ data }: { data: [Patient['id'], Patient][] }) {
   const { data: dataPoints } = api.dataPoints.getAllForPatients.useQuery({ patient_ids: data.map(([id]) => id) });
-  if (!dataPoints) return <div>Loading...</div>;
+  if (!dataPoints) return <Loading />;
   return <div className="flex flex-col items-center">
     {measurementKeys.map((key) => <MeasurementChart key={key} measurementKey={key} data={dataPoints} />)}
   </div>;
