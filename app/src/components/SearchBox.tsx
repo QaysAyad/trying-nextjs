@@ -1,6 +1,6 @@
 import { useState } from "react";
-
-export const InputBox = ({ onSearch }: { onSearch: (text: string) => void }) => {
+export type OnSearchCallBack = (text: string) => void;
+export const SearchBox = ({ onSearch }: { onSearch: OnSearchCallBack }) => {
     const [search, setSearch] = useState('');
     return <div className="w-full">
         <label
