@@ -6,9 +6,10 @@ import { api } from "~/utils/api";
 import AuthRenderProtector from "~/components/AuthRenderProtector";
 import Loading from "~/components/loading";
 import { Suspense } from "react";
-import type { Patient,  DataPoint } from "@prisma/client";
+import type { Patient, DataPoint } from "@prisma/client";
 import { snakeCaseToText } from "~/utils/string";
 import { dayFormatter } from "~/utils/dayjs";
+import { Table, TableBody, TableDataCell, TableHeader, TableHeaderColumnCell, TableHeaderRowCell, TableRow, TableRowEvenOdd } from "~/components/Table";
 
 // TODO: Remove this.
 // Patient.getInitialProps = (ctx: NextPageContext) => {
@@ -56,74 +57,70 @@ function AuthPart({ client_id }: Props) {
       {data && <h2 className="text-3xl font-semibold text-white">Info</h2>}
       {data && <TableInfo data={data} />}
       {data && <h2 className="text-3xl font-semibold text-white">Data Points</h2>}
-      {data && <Table data={data.dataPoints} />}
+      {data && <DataTable data={data.dataPoints} />}
       {data && <AllMeasurementsCharts data={new Map([[data.id, data.dataPoints]])} />}
     </>
   );
 }
 
 function TableInfo({ data }: { data: Patient }) {
-  return <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-    <table className="w-full text-sm text-left text-gray-700 dark:text-gray-200">
-      <thead className="text-xs text-gray-800 uppercase bg-violet-50 dark:bg-violet-700 dark:text-gray-300">
-        <tr>
-          <th scope="col" className="px-6 py-3">
-            Birth Date
-          </th>
-          <th scope="col" className="px-6 py-3">
-            Ethnicity
-          </th>
-          <th scope="col" className="px-6 py-3">
-            Gender
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr className='border-b dark:border-violet-700 bg-violet-50 dark:bg-violet-800'>
-          <td className="px-6 py-4">
-            {dayFormatter(data.date_birthdate)}
-          </td>
-          <td className="px-6 py-4">
-            {/* TODO: Map the enum numbers to text readable values */}
-            {data.ethnicity}
-          </td>
-          <td className="px-6 py-4">
-            {/* TODO: Map the enum numbers to text readable values */}
-            {data.gender}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  return <Table>
+    <TableHeader>
+      <TableRow>
+        <TableHeaderColumnCell>
+          Birth Date
+        </TableHeaderColumnCell>
+        <TableHeaderColumnCell>
+          Ethnicity
+        </TableHeaderColumnCell>
+        <TableHeaderColumnCell>
+          Gender
+        </TableHeaderColumnCell>
+      </TableRow>
+    </TableHeader>
+    <TableBody>
+      <TableRowEvenOdd even>
+        <TableDataCell>
+          {dayFormatter(data.date_birthdate)}
+        </TableDataCell>
+        <TableDataCell>
+          {/* TODO: Map the enum numbers to text readable values */}
+          {data.ethnicity}
+        </TableDataCell>
+        <TableDataCell>
+          {/* TODO: Map the enum numbers to text readable values */}
+          {data.gender}
+        </TableDataCell>
+      </TableRowEvenOdd>
+    </TableBody>
+  </Table>
 }
 
-function Table({ data }: { data: DataPoint[] }) {
-  return <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-    <table className="w-full text-sm text-left text-gray-700 dark:text-gray-200">
-      <thead className="text-xs text-gray-800 uppercase bg-violet-50 dark:bg-violet-700 dark:text-gray-300">
-        <tr>
-          <th scope="col" className="px-6 py-3">
-            Testing Date
-          </th>
-          {measurementKeys.map((key) => <th key={key} scope="col" className="px-6 py-3">
-            {snakeCaseToText(key)}
-          </th>)}
-        </tr>
-      </thead>
-      <tbody>
-        {data.map((dataPoint, i) =>
-          <tr key={i} className={`border-b dark:border-violet-700 ${i % 2 ? 'bg-white dark:bg-violet-900' : 'bg-violet-50 dark:bg-violet-800'}`}>
-            <th scope="row" className="px-6 py-4 font-medium text-gray whitespace-nowrap dark:text-white">
-              {/* We shouldn't use utc because it should show the day of the testing corresponding to the system date. */}
-              {dayFormatter(dataPoint.date_testing)}
-            </th>
-            {measurementKeys.map((key) => <td key={key} className="px-6 py-4">
-              {dataPoint[key]}
-            </td>)}
-          </tr>)}
-      </tbody>
-    </table>
-  </div>
+function DataTable({ data }: { data: DataPoint[] }) {
+  return <Table>
+    <TableHeader>
+      <TableRow>
+        <TableHeaderColumnCell>
+          Testing Date
+        </TableHeaderColumnCell>
+        {measurementKeys.map((key) => <TableHeaderColumnCell key={key}>
+          {snakeCaseToText(key)}
+        </TableHeaderColumnCell>)}
+      </TableRow>
+    </TableHeader>
+    <TableBody>
+      {data.map((dataPoint, i) =>
+        <TableRowEvenOdd key={i} even={!(i % 2)}>
+          <TableHeaderRowCell>
+            {/* We shouldn't use utc because it should show the day of the testing corresponding to the system date. */}
+            {dayFormatter(dataPoint.date_testing)}
+          </TableHeaderRowCell>
+          {measurementKeys.map((key) => <TableDataCell key={key}>
+            {dataPoint[key]}
+          </TableDataCell>)}
+        </TableRowEvenOdd>)}
+    </TableBody>
+  </Table>;
 }
 
 export const getStaticProps: GetStaticProps = async (context) => {
