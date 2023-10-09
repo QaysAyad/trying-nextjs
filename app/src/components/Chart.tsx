@@ -1,6 +1,6 @@
-import dayjs from "dayjs";
 import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 import type { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
+import { dayFormatter } from "~/utils/dayjs";
 // This is called typescript types gymnastic when you want to create a type for your special case.
 export type ChartDataPoints<T extends string, Y extends string = T extends 'date' ? never : T> = {
     date: number;
@@ -13,9 +13,6 @@ export interface LineData {
     stroke: string;
 }
 
-const dateFormatter = (date: Date) => {
-    return dayjs(date).format('DD/MM/YYYY');
-};
 
 const dataFormatter = (value: ValueType, key: NameType, unit:string) => {
     return `PatientId, ${value.toString()}${unit} : reading`;
@@ -39,12 +36,12 @@ export function Chart<T extends string>({ lines, unit, data }: { lines: LineData
             domain={['dataMin', 'dataMax']}
             scale="time"
             type="number"
-            tickFormatter={dateFormatter} />
+            tickFormatter={dayFormatter} />
         <YAxis domain={['dataMin', 'dataMax']} />
         <Tooltip
             // TODO: Find a way to have full control over the tooltip.
             formatter={(v, k) => dataFormatter(v, k, unit)}
-            labelFormatter={dateFormatter}
+            labelFormatter={dayFormatter}
         />
         <Legend />
         {lines.map((line) =>
