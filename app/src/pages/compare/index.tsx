@@ -10,6 +10,7 @@ import { dayFormatter } from "~/utils/dayjs";
 import { snakeCaseToText } from "~/utils/string";
 import { RejectButton } from "~/components/Buttons";
 import { PatientsSelectBox } from "~/components/PatientsSelectBox";
+import Link from "next/link";
 
 export default function Compare() {
 
@@ -30,6 +31,7 @@ type SelectedPatients = [Patient['id'], Patient][];
 function AuthPart() {
   const [search, setSearch] = useState('');
   const { data: patients } = api.patients.search.useQuery({ client_id: search });
+  // TODO: Move selectedPatients state to use url query params to fix the problem of losing the state when refreshing the page or going back from another page.
   const [_selectedPatients, setSelectedPatients] = useState(new Map<Patient['id'], Patient>());
   const selectedPatients = useMemo<SelectedPatients>(() => Array.from(_selectedPatients), [_selectedPatients]);
   return (
@@ -127,7 +129,9 @@ function DataTable({ selectedPatients, data, deselect }: DataTableProps) {
         const dataPoint = data.get(id)!.slice(-1)[0]!;
         return <TableRowEvenOdd key={i} even={!(i % 2)}>
           <TableHeaderRowCell>
-            {patient.client_id}
+            <Link href={`/patients/${patient.client_id}`}>
+              {patient.client_id}
+            </Link>
           </TableHeaderRowCell>
           <TableDataCell>
             {dayFormatter(patient.date_birthdate)}
