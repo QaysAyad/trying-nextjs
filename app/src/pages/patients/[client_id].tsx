@@ -58,7 +58,7 @@ function AuthPart({ client_id }: Props) {
       {data && <TableInfo data={data} />}
       {data && <h2 className="text-3xl font-semibold text-white">Data Points</h2>}
       {data && <DataTable data={data.dataPoints} />}
-      {data && <AllMeasurementsCharts data={new Map([[data.id, data.dataPoints]])} />}
+      {data && <AllMeasurementsCharts data={new Map([[data.client_id, data.dataPoints]])} />}
     </>
   );
 }

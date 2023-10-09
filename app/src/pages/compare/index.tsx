@@ -85,12 +85,17 @@ function SelectedBox({ data, onRemove }: { data: SelectedPatients, onRemove: (id
 type PatentsDataPoints = Map<Patient['id'], DataPoint[]>;
 export function AllCharts({ data, deselect }: { data: SelectedPatients, deselect: DataTableProps['deselect'] }) {
   const { data: dataPoints } = api.dataPoints.getAllForPatients.useQuery({ patient_ids: data.map(([id]) => id) });
+  const mappedDataPoints = useMemo(() => dataPoints &&
+   new Map([...dataPoints.entries()].map<[string, DataPoint []]>(([id, dataPoint]) =>
+      [data.find(([idd]) => `${idd}` === `${id}`)![1].client_id, dataPoint])), [dataPoints]);
+  
   if (!dataPoints) return <Loading />;
+  
   return <div className="flex flex-col items-center">
     <div className="w-full">
       {dataPoints && <DataTable deselect={deselect} selectedPatients={data} data={dataPoints} />}
     </div>
-    {measurementKeys.map((key) => <MeasurementChart key={key} measurementKey={key} data={dataPoints} />)}
+    {mappedDataPoints?.size && measurementKeys.map((key) => <MeasurementChart key={key} measurementKey={key} data={mappedDataPoints} />)}
   </div>;
 }
 

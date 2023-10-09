@@ -22,7 +22,7 @@ export const measurementUnitsKeys: Record<MeasurementKeys, `${MeasurementKeys}_u
 
 export const measurementKeys = Object.keys(measurementUnitsKeys) as MeasurementKeys[];
 
-export function MeasurementChart(props: { measurementKey: MeasurementKeys, data: Map<Patient['id'], DataPoint[]> }) {
+export function MeasurementChart(props: { measurementKey: MeasurementKeys, data: Map<Patient['client_id'], DataPoint[]> }) {
     const { measurementKey } = props;
     const data = Array.from(props.data);
     const unit = data[0]![1][0]![measurementUnitsKeys[measurementKey]];
@@ -31,9 +31,9 @@ export function MeasurementChart(props: { measurementKey: MeasurementKeys, data:
     >
         <Chart
             unit={unit}
-            lines={data.map(([id]) => ({
+            lines={data.map(([id, dataPoints]) => ({
                 key: `${id}`,
-                stroke: `#${Math.floor((Math.abs(Math.sin(id) * 16777215))).toString(16)}`,
+                stroke: `#${Math.floor((Math.abs(Math.sin(dataPoints[0]!.patient_id) * 16777215))).toString(16)}`,
             }))}
             // TODO: This is a cpu intensive operation, if the data is too big, 
             // we either need to do it on the server with a special endpoint 
@@ -65,7 +65,7 @@ export function MeasurementChart(props: { measurementKey: MeasurementKeys, data:
     </div>;
 }
 
-export function AllMeasurementsCharts({ data }: { data: Map<Patient['id'], DataPoint[]> }) {
+export function AllMeasurementsCharts({ data }: { data: Map<Patient['client_id'], DataPoint[]> }) {
     return <div className="flex flex-col items-center">
         {measurementKeys.map((key) => <MeasurementChart key={key} measurementKey={key} data={data} />)}
     </div>;

@@ -15,7 +15,7 @@ export interface LineData {
 
 
 const dataFormatter = (value: ValueType, key: NameType, unit:string) => {
-    return `PatientId, ${value.toString()}${unit} : reading`;
+    return `clientId, ${value.toString()}${unit} : reading`;
 };
 
 /**
