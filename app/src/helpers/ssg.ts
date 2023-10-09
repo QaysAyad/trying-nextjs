@@ -3,9 +3,9 @@ import { appRouter } from "~/server/api/root";
 import { db } from "~/server/db";
 import superjson from "superjson";
 
-export const generateSSGHelper = createServerSideHelpers({
+export const ssgHelper = createServerSideHelpers({
     router: appRouter,
-    ctx: { db, session: null },
+    ctx:  { db, session: null },
     transformer: superjson, // optional - adds superjson serialization
 });
 
