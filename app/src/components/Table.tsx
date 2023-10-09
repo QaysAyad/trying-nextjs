@@ -13,13 +13,13 @@ export function TableHeader({ children }: { children: React.ReactNode }) {
 }
 
 export function TableHeaderColumnCell({ children }: { children: React.ReactNode }) {
-    return <th scope="col" className="px-6 py-3">
+    return <th scope="col" className="px-4 py-3">
         {children}
     </th>;
 }
 
 export function TableHeaderRowCell({ children }: { children: React.ReactNode }) {
-    return <th scope="row" className="px-6 py-4 font-medium text-gray whitespace-nowrap dark:text-white">
+    return <th scope="row" className="px-4 py-4 font-medium text-gray whitespace-nowrap dark:text-white">
         {children}
     </th>;
 }
@@ -35,7 +35,7 @@ export function TableRow({ children }: { children: React.ReactNode }) {
 }
 
 export function TableDataCell({ children }: { children: React.ReactNode }) {
-    return <td className="px-6 py-4">
+    return <td className="px-4 py-4">
         {children}
     </td>;
 }
