@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import { useState } from "react";
-import Loading from "~/components/loading";
+import Loading from "~/components/Loading";
 
 import { api } from "~/utils/api";
 

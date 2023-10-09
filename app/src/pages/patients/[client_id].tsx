@@ -4,7 +4,7 @@ import HeadAndBackground from "~/components/HeadAndBackground";
 import { ssgHelper } from "~/helpers/ssg";
 import { api } from "~/utils/api";
 import AuthRenderProtector from "~/components/AuthRenderProtector";
-import Loading from "~/components/loading";
+import Loading from "~/components/Loading";
 import { Suspense } from "react";
 import type { Patient, DataPoint } from "@prisma/client";
 import { snakeCaseToText } from "~/utils/string";

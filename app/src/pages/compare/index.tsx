@@ -4,7 +4,7 @@ import { api } from "~/utils/api";
 import HeadAndBackground from "~/components/HeadAndBackground";
 import { MeasurementChart, measurementKeys } from "~/components/MeasurementChart";
 import AuthRenderProtector from "~/components/AuthRenderProtector";
-import Loading from "~/components/loading";
+import Loading from "~/components/Loading";
 import { Table, TableBody, TableDataCell, TableHeader, TableHeaderColumnCell, TableHeaderRowCell, TableRow, TableRowEvenOdd } from "~/components/Table";
 import { dayFormatter } from "~/utils/dayjs";
 import { snakeCaseToText } from "~/utils/string";
@@ -91,10 +91,12 @@ export function AllCharts({ data, deselect }: { data: SelectedPatients, deselect
   
   if (!dataPoints) return <Loading />;
   
-  return <div className="flex flex-col items-center">
+  return <div className="flex flex-col items-center gap-4">
+    {data && <h2 className="text-3xl font-semibold text-white">Selected Patients</h2>}
     <div className="w-full">
       {dataPoints && <DataTable deselect={deselect} selectedPatients={data} data={dataPoints} />}
     </div>
+    {data && <h2 className="text-3xl font-semibold text-white">Data Points</h2>}
     {mappedDataPoints?.size && measurementKeys.map((key) => <MeasurementChart key={key} measurementKey={key} data={mappedDataPoints} />)}
   </div>;
 }
