@@ -63,3 +63,9 @@ export function MeasurementChart(props: { measurementKey: MeasurementKeys, data:
         </div>
     </div>;
 }
+
+export function AllMeasurementsCharts({ data }: { data: Map<Patient['id'], DataPoint[]> }) {
+    return <div className="flex flex-col items-center">
+        {measurementKeys.map((key) => <MeasurementChart key={key} measurementKey={key} data={data} />)}
+    </div>;
+}
