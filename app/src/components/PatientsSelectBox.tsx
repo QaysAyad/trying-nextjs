@@ -8,17 +8,23 @@ interface Props {
     onSearch: OnSearchCallBack;
 }
 export const PatientsSelectBox = ({ data, onSelect, onSearch }: Props) => {
-    return <>
+    return <div className="p-6">
         <SearchBox onSearch={onSearch} />
-        <div className="w-50 h-40 overflow-y-scroll flex flex-col items-stretch">
+        <div className="w-full flex flex-col items-stretch">
             {!data && <Loading />}
-            {data?.map((patient) => <button
-                className="bg-white/10 px-2 font-semibold text-white no-underline transition hover:bg-white/20"
-                key={patient.id}
-                onClick={() => onSelect(patient)}
-            >
-                {patient.client_id}
-            </button>)}
+            <div>
+                <h4 className="py-4 font-semibold text-white">Click the name to select</h4>
+                <div className="flex flex-wrap gap-4 p-4 rounded-lg border">
+                    {data?.map((patient) => <button
+                        className="bg-white/10 px-10 py-3 rounded-lg font-semibold text-white no-underline transition hover:bg-white/20"
+                        key={patient.id}
+                        onClick={() => onSelect(patient)}
+                    >
+                        {patient.client_id}
+                    </button>)}
+                </div>
+
+            </div>
         </div>
-    </>;
+    </div>;
 };
