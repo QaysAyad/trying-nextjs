@@ -1,54 +1,36 @@
-import { useSession } from "next-auth/react";
-import Head from "next/head";
-import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { Suspense, useState } from "react";
+import AuthRenderProtector from "~/components/AuthRenderProtector";
+import HeadAndBackground from "~/components/HeadAndBackground";
 import Loading from "~/components/Loading";
+import { PatientsSelectBox } from "~/components/PatientsSelectBox";
 
 import { api } from "~/utils/api";
 
 export default function Patients() {
-  return (
-    <>
-      <Head>
-        <title>Compare Patents</title>
-        <meta name="description" content="Know Patents App" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
+  return <HeadAndBackground
+    title="Patents"
+  >
+    <AuthRenderProtector>
+      <Suspense fallback={<Loading />}>
         <AuthPart />
-      </main>
-    </>
-  );
+      </Suspense>
+    </AuthRenderProtector>
+  </HeadAndBackground>;
 }
 
 function AuthPart() {
   const [search, setSearch] = useState('');
-  const { data: sessionData } = useSession();
-  const { data: patients, isLoading: isLoadingPatients } = api.patients.search.useQuery({ client_id: search });
+  const router = useRouter();
+  const { data: patients } = api.patients.search.useQuery({ client_id: search });
   return (
-    <>
-      <div className="flex">
-        <div className="flex flex-col">
-          <h2 className="text-3xl font-semibold text-white">Patients</h2>
-          <input
-            placeholder="Search with Client ID"
-            className="grow bg-transparent outline-none"
-            type="text"
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <div className="w-50 h-40  overflow-scroll flex flex-col items-stretch">
-            {isLoadingPatients && <Loading />}
-            {patients?.map((patient) =>
-              <Link
-                key={patient.id}
-                href={`/patients/${patient.client_id}`}
-                className="bg-white/10 px-2 font-semibold text-white no-underline transition hover:bg-white/20"
-              >
-                {patient.client_id}
-              </Link>)}
-          </div>
-        </div>
-      </div>
-    </>
+    <div className="flex flex-col">
+      <h2 className="text-3xl font-semibold text-white">Patients</h2>
+      <PatientsSelectBox
+        data={patients}
+        onSearch={setSearch}
+        onSelect={(patient) => void router.push(`/patients/${patient.client_id}`)} />
+    </div>
   );
 }
+

@@ -13,21 +13,19 @@ import { PatientsSelectBox } from "~/components/PatientsSelectBox";
 import Link from "next/link";
 
 export default function Compare() {
-
   return (
-    <>
-      <HeadAndBackground
-        title="Compare Patents"
-      >
-        <AuthRenderProtector>
-          <AuthPart />
-        </AuthRenderProtector>
-      </HeadAndBackground>
-    </>
+    <HeadAndBackground
+      title="Compare Patents"
+    >
+      <AuthRenderProtector>
+        <AuthPart />
+      </AuthRenderProtector>
+    </HeadAndBackground>
   );
 }
 
 type SelectedPatients = [Patient['id'], Patient][];
+
 function AuthPart() {
   const [search, setSearch] = useState('');
   const { data: patients } = api.patients.search.useQuery({ client_id: search });
@@ -36,14 +34,12 @@ function AuthPart() {
   const selectedPatients = useMemo<SelectedPatients>(() => Array.from(_selectedPatients), [_selectedPatients]);
   return (
     <>
-      <div className="flex">
-        <div className="flex flex-col">
-          <h2 className="text-3xl font-semibold text-white">Patients</h2>
-             <PatientsSelectBox
-              data={patients}
-              onSearch={setSearch}
-              onSelect={(patient) => setSelectedPatients((prev) => new Map(prev).set(patient.id, patient))} />
-        </div>
+      <div className="flex flex-col">
+        <h2 className="text-3xl font-semibold text-white">Patients</h2>
+        <PatientsSelectBox
+          data={patients}
+          onSearch={setSearch}
+          onSelect={(patient) => setSelectedPatients((prev) => new Map(prev).set(patient.id, patient))} />
       </div>
       {selectedPatients.length && <AllCharts deselect={(id) => setSelectedPatients((prev) => {
         const newMap = new Map(prev);
@@ -52,23 +48,6 @@ function AuthPart() {
       })} data={selectedPatients} />}
     </>
   );
-}
-
-function SelectedBox({ data, onRemove }: { data: SelectedPatients, onRemove: (id: Patient['id']) => void }) {
-  return <div>
-    <h2 className="text-3xl font-semibold text-white">Selected</h2>
-    <div className="border">
-      {data.map(([id, patient]) =>
-        <button
-          className="bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-          key={id}
-          onClick={() => onRemove(id)}
-        >
-          {patient.client_id} RemoveIcon
-        </button>)}
-    </div>
-
-  </div>;
 }
 
 type PatentsDataPoints = Map<Patient['id'], DataPoint[]>;
