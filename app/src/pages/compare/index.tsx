@@ -8,6 +8,7 @@ import { Chart, type ChartDataPoints } from "~/components/Chart";
 import { api } from "~/utils/api";
 import HeadAndBackground from "~/components/HeadAndBackground";
 import { MeasurementChart, measurementKeys } from "~/components/MeasurementChart";
+import AuthRenderProtector from "~/components/AuthRenderProtector";
 
 export default function Compare() {
 
@@ -16,7 +17,9 @@ export default function Compare() {
       <HeadAndBackground
         title="Compare Patents"
       >
-        <AuthPart />
+        <AuthRenderProtector>
+          <AuthPart />
+        </AuthRenderProtector>
       </HeadAndBackground>
     </>
   );
